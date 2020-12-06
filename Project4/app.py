@@ -40,8 +40,8 @@ def currency_converter(cost, currency):
     response = requests.get(url).json()
     main_functions.save_to_file(response, "JSON_Files/currency.json")
     currencyinfo = main_functions.read_from_file("JSON_Files/currency.json")
-    #print("selected Currency is" + currency)
-    #print("current cost is " + cost + "in" + currency)
+    print("selected Currency is" + currency)
+    print("current cost is " + cost + "in" + currency)
     currencystring = "USD" + currency
     if currency == "USD":
         return cost
@@ -49,10 +49,10 @@ def currency_converter(cost, currency):
         USDexchangerate = currencyinfo["quotes"][currencystring]
         converted_cost = float(cost) / float(USDexchangerate)
         formattedcost = "{:.2f}".format(converted_cost)
-        #print("Cost is now" + formattedcost + "in USD")
+        print("Cost is now" + formattedcost + "in USD")
 
     ### YOUR TASK IS TO COMPLETE THIS FUNCTION
-        return converted_cost
+        return formattedcost
 
 
 @app.route('/')
@@ -61,6 +61,7 @@ def index():
     total_cost = 0
     for i in my_expenses:
         total_cost += float(i["Cost"])
+        formattedtotalcost = "{:.2f}".format(total_cost)
 
     expensesByCategory = [("Rent", get_total_expenses("Rent")),
                           ("Water", get_total_expenses("Water")),
@@ -71,7 +72,7 @@ def index():
     # each tuple has two elements:
     ## a string containing the category label, for example, insurance
     ## the total cost of this category
-    return render_template("index.html", expenses=total_cost, expensesByCategory=expensesByCategory)
+    return render_template("index.html", expenses=formattedtotalcost, expensesByCategory=expensesByCategory)
 
 
 @app.route('/addExpenses', methods=["GET", "POST"])
